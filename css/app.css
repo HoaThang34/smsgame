@@ -1,0 +1,434 @@
+/*
+ © 2025 Hòa Quang Thắng. Mọi quyền được bảo lưu. 
+ Ghi chú: Các chú thích bên dưới được thêm tự động để giải thích mã nguồn mà KHÔNG thay đổi logic.
+*/
+/* --- SMS - Giao diện v2.3 by Gemini --- */
+
+/* 1. Thiết lập biến màu và hiệu ứng (Theme) */
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffffcc;
+  --surface-strong: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --brand: #2563eb;
+  --brand-hover: #1d4ed8;
+  --brand-gradient: linear-gradient(45deg, #3b82f6, #60a5fa);
+  --brand-2: #10b981;
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --border: #e2e8f0;
+  --radius: 24px;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+  --glass: blur(16px) saturate(180%);
+  --transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293bcc;
+  --surface-strong: #1e293b;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --brand: #60a5fa;
+  --brand-hover: #93c5fd;
+  --brand-gradient: linear-gradient(45deg, #3b82f6, #2563eb);
+  --brand-2: #34d399;
+  --danger: #f87171;
+  --warn: #fbbf24;
+  --border: #334155;
+  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 20px 40px -10px rgba(0, 0, 0, 0.35);
+}
+
+/* 2. Thiết lập cơ bản & Nền Aurora "ma thuật" */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Be Vietnam Pro', sans-serif, system-ui, -apple-system;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: 
+    radial-gradient(at 20% 25%, hsla(212, 90%, 70%, 0.2) 0px, transparent 50%),
+    radial-gradient(at 80% 20%, hsla(288, 80%, 70%, 0.15) 0px, transparent 50%),
+    radial-gradient(at 25% 80%, hsla(160, 80%, 60%, 0.2) 0px, transparent 50%),
+    radial-gradient(at 80% 85%, hsla(30, 90%, 70%, 0.2) 0px, transparent 50%);
+  z-index: -1;
+  animation: gradient-pan 25s linear infinite;
+}
+
+[data-theme="dark"] body::before { opacity: 0.6; }
+
+
+/* 3. Layout chung & Panel */
+.page { max-width: 980px; margin: 0 auto; padding: 1rem; }
+.page.fullheight { 
+  min-height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  padding: 0 1rem;
+}
+.center { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 5vw, 2rem);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+.glass { backdrop-filter: var(--glass); }
+.brand { font-weight: 900; font-size: clamp(24px, 5vw, 38px); letter-spacing: -1px; }
+.lead { color: var(--muted); margin: 0.5rem 0 1.5rem; font-size: 1.1rem; }
+.cert-title {
+  background: -webkit-linear-gradient(45deg, var(--brand), var(--brand-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* 4. Form & Nút bấm được thiết kế lại */
+.form label { display: block; margin: 1rem 0 0.5rem; font-weight: 700; text-align: left; }
+input[type="text"] {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 1.1rem;
+  background: var(--surface-strong);
+  color: var(--text);
+  transition: var(--transition);
+}
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+
+.actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  min-height: 52px;
+  letter-spacing: .2px;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--text);
+  background-color: var(--surface-strong);
+  border: 1px solid var(--border);
+}
+.btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+.btn:active {
+  transform: translateY(-1px) scale(0.99);
+  box-shadow: var(--shadow);
+}
+.btn.primary {
+  background: var(--brand-gradient);
+  color: #fff;
+  border: none;
+}
+.btn.primary:hover { background: var(--brand-hover); }
+.btn.ghost { background: transparent; box-shadow: none; border: 1px solid var(--border); }
+.btn.ghost:hover { background: var(--surface-strong); }
+.btn.big { width: 100%; }
+.btn[disabled] {
+  cursor: not-allowed;
+  filter: saturate(0) opacity(0.5);
+  transform: none;
+  box-shadow: none;
+}
+.icon-btn {
+  border: 1px solid var(--border);
+  background: var(--surface-strong);
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.icon-btn:hover { transform: scale(1.05); background: color-mix(in srgb, var(--bg) 50%, var(--surface-strong)); }
+.hint { color: var(--muted); margin-top: 1rem; }
+.footer { padding: 1.5rem 0; text-align: center; }
+.muted { color: var(--muted); }
+
+
+/* 5. Giao diện Game */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  padding: 0.75rem 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+}
+.topbar .title { font-weight: 700; }
+.topbar .stats { color: var(--muted); font-weight: 700; }
+.tools { display: flex; align-items: center; gap: 0.75rem; }
+.content { 
+  display: grid; 
+  gap: 1rem; 
+  flex: 1; 
+  padding: 1rem 0; 
+}
+.stretch { grid-template-rows: auto 1fr; }
+
+.notif { display: flex; justify-content: center; padding-top: 1rem; }
+.notif-btn {
+  background: var(--brand-2);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+.notif-btn:hover { transform: scale(1.03); box-shadow: var(--shadow-lg); }
+
+/* 6. Khung Chat được làm mới */
+.chat {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  max-height: calc(100vh - 220px);
+}
+.chat-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface-strong);
+  border-bottom: 1px solid var(--border);
+}
+.avatar {
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
+  font-size: 1.5rem;
+}
+.name { font-weight: 900; }
+.meta { color: var(--muted); font-size: 0.9rem; }
+.chat-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: auto;
+}
+.msg {
+  max-width: 85%;
+  padding: 0.75rem 1rem;
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+.msg.left {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  color: var(--text);
+  border-bottom-left-radius: 6px;
+}
+.msg.right {
+  background: var(--brand);
+  align-self: flex-end;
+  color: #fff;
+  border-bottom-right-radius: 6px;
+}
+[data-theme="dark"] .msg.right { background: #2563eb; }
+.msg .link {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  word-break: break-all;
+}
+.msg .link:hover { opacity: 0.8; }
+.preview {
+  margin-top: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+  border-radius: 12px;
+  padding: 0.5rem;
+  background: color-mix(in srgb, var(--surface-strong) 50%, transparent);
+}
+.typing { padding: 0 1rem 0.5rem 1rem; }
+.dot {
+  display: inline-block; width: 8px; height: 8px;
+  background: var(--muted); border-radius: 50%;
+  margin-right: 5px; animation: blink 1.4s infinite ease-in-out both;
+}
+.dot:nth-child(2) { animation-delay: .2s; }
+.dot:nth-child(3) { animation-delay: .4s; }
+
+.chat-actions {
+  display: grid; grid-template-columns: 1fr; gap: 0.5rem;
+  padding: 1rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 720px) { .chat-actions { grid-template-columns: 1fr 1fr 1fr; } }
+.explain {
+  margin: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--warn);
+  background: color-mix(in srgb, var(--warn) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--warn) 20%, transparent);
+  border-radius: 12px;
+  color: var(--text);
+}
+[data-theme="dark"] .explain { color: #fefce8; }
+
+
+/* 7. Modal, Banner, Toast (Đã sửa và thiết kế lại) */
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 1.5rem;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.75rem 1.25rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+}
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(15, 23, 42, .6);
+  backdrop-filter: blur(8px);
+  display: none; align-items: center; justify-content: center;
+  padding: 1rem; z-index: 50;
+  transition: opacity 0.3s ease;
+}
+.modal.active { display: flex; }
+.modal-card { 
+  max-width: 560px;
+  width: 100%; 
+  text-align: left;
+  padding: clamp(1.5rem, 5vw, 2rem);
+  box-shadow: var(--shadow-lg);
+  
+  /* ** GHI CHÚ **: Luôn dùng giao diện SÁNG và bo góc tròn hơn */
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 32px; /* Bo góc tròn hơn */
+  text-shadow: none;
+}
+.modal-card h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+  color: #1e293b;
+}
+.list { 
+  list-style: none;
+  padding-left: 0;
+  margin: 1.5rem 0; 
+}
+.list li { 
+  position: relative;
+  padding-left: 1.75rem;
+  margin-bottom: 1rem;
+  color: #334155; /* Dùng màu chữ phụ cho dễ đọc hơn */
+}
+.list li b {
+  color: #1e293b; /* Chữ in đậm có màu chính */
+}
+.list li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  top: -2px;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: #2563eb; /* Luôn dùng màu xanh của theme sáng */
+}
+.modal-card .actions {
+  margin-top: 2rem;
+}
+
+.day-banner {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 60;
+  background: rgba(2, 6, 23, .36);
+  backdrop-filter: blur(8px);
+}
+.banner-card {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.banner-card h3 { margin: 0.5rem 0; font-size: 1.5rem; }
+.banner-card p { margin: 0; color: var(--muted); }
+.banner-card .emoji { font-size: 2.5rem; }
+
+
+/* 8. Hiệu ứng & Animations */
+.hidden { display: none !important; }
+.anim-rise { animation: rise 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+.anim-popIn { animation: popIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+.anim-fadeInUp { animation: fadeInUp 0.5s ease-out both; }
+
+@keyframes gradient-pan {
+  0% { transform: translate(0%, 0%); }
+  25% { transform: translate(5%, -10%); }
+  50% { transform: translate(-10%, 10%); }
+  75% { transform: translate(10%, -5%); }
+  100% { transform: translate(0%, 0%); }
+}
+
+@keyframes blink { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { transform: scale(.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translate3d(0, 30px, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Certificate Canvas fallback */
+#cert { border-radius: 16px; width:100%; height:auto; }

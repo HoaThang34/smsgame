@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+ © 2025 Hòa Quang Thắng. Mọi quyền được bảo lưu. 
+ Ghi chú: Các chú thích bên dưới được thêm tự động để giải thích mã nguồn mà KHÔNG thay đổi logic.
+-->
+<html lang="vi">
+<head>
+<!-- Giải thích: Phần <head> — metadata, CSS, script được nạp sớm. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giấy chứng nhận — SMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<!-- Giải thích: Phần <body> — cấu trúc giao diện và nội dung hiển thị. -->
+  <main class="page center">
+    <div class="panel cert glass anim-fadeInUp">
+      <h1 id="certTitle" class="cert-title">🎉</h1>
+      <p id="certSub" class="lead">—</p>
+      <canvas id="cert" width="1000" height="700" class="card"></canvas>
+      <div class="actions">
+        <button id="btnSave" class="btn">Tải ảnh chứng nhận</button>
+        <a href="index.html" class="btn ghost">Chơi lại</a>
+      </div>
+    </div>
+  </main>
+  <footer class="footer muted">© Hòa Quang Thắng</footer>
+  <script src="js/cert.js"></script>
+</body>
+</html>

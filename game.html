@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--
+ © 2025 Hòa Quang Thắng. Mọi quyền được bảo lưu. 
+ Ghi chú: Các chú thích bên dưới được thêm tự động để giải thích mã nguồn mà KHÔNG thay đổi logic.
+-->
+<html lang="vi" data-theme="light">
+<head>
+<!-- Giải thích: Phần <head> — metadata, CSS, script được nạp sớm. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chơi — SMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<!-- Giải thích: Phần <body> — cấu trúc giao diện và nội dung hiển thị. -->
+  <!-- 
+    ** GHI CHÚ SỬA LỖI **
+    - Thẻ <footer> đã được di chuyển vào bên trong thẻ <main> 
+    - Điều này giúp layout flexbox hoạt động chính xác và đẩy footer xuống cuối màn hình.
+  -->
+  <main class="page fullheight">
+    <header class="topbar glass">
+      <a class="back icon-btn" href="index.html" aria-label="Quay lại">←</a>
+      <div class="title">
+        <span id="titleName">Xin chào</span> — Ngày <span id="dayNow">1</span>/<span id="dayMax">5</span>
+      </div>
+      <div class="tools">
+        <div class="stats">⭐ <b id="score">0</b>&nbsp;&nbsp;❤️ <b id="trust">50</b></div>
+        <button id="btnTheme" class="icon-btn" aria-label="Đổi giao diện">🌙</button>
+      </div>
+    </header>
+
+    <section class="content stretch">
+      <div id="notif" class="notif hidden anim-popIn">
+        <button id="btnOpenNotif" class="notif-btn">🔔 Bạn có 1 tin nhắn mới — Mở</button>
+      </div>
+
+      <div id="calm" class="panel center hidden glass" style="min-height:160px">
+        <p>☀️ Hôm nay yên bình, không có tin nhắn lạ.</p>
+      </div>
+
+      <div id="chatWrap" class="chat hidden glass anim-rise" role="group" aria-label="Khung chat giả lập">
+        <div class="chat-header">
+          <div class="avatar">👤</div>
+          <div>
+            <div class="name" id="chatName">Liên hệ</div>
+            <div class="meta" id="chatMeta">đang online</div>
+          </div>
+        </div>
+        <div id="chatBody" class="chat-body scroll"></div>
+        <div id="typing" class="typing hidden"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="chat-actions">
+          <button id="actA" class="btn big">Bấm link / Điền form</button>
+          <button id="actB" class="btn big primary">Gọi / Kiểm tra kênh chính thức</button>
+          <button id="actC" class="btn big ghost">Thoát chat</button>
+        </div>
+        <div id="explain" class="explain hidden"></div>
+      </div>
+
+      <div id="toast" class="toast hidden">Mẹo: Vuốt phải = Gọi kiểm chứng • Vuốt trái = Thoát</div>
+
+      <div id="dayBanner" class="day-banner hidden">
+        <div class="banner-card glass anim-popIn">
+          <div class="emoji">🎉</div>
+          <h3 id="bannerTitle">Chúc mừng!</h3>
+          <p id="bannerSub">Chào mừng ngày mới</p>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="footer muted">© Hòa Quang Thắng</footer>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.v4d.js"></script>
+</body>
+</html>

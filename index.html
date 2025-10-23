@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+ © 2025 Hòa Quang Thắng. Mọi quyền được bảo lưu. 
+ Ghi chú: Các chú thích bên dưới được thêm tự động để giải thích mã nguồn mà KHÔNG thay đổi logic.
+-->
+<html lang="vi">
+<head>
+<!-- Giải thích: Phần <head> — metadata, CSS, script được nạp sớm. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<!-- Giải thích: Phần <body> — cấu trúc giao diện và nội dung hiển thị. -->
+  <main class="page center">
+    <div class="panel intro glass anim-fadeInUp">
+      <h1 class="brand">🛡️ SMS</h1>
+      <p class="lead">Mô phỏng lừa đảo qua tin nhắn.</p>
+      <form id="formStart" class="form" novalidate>
+        <label for="playerName">👤 Tên của bạn</label>
+        <input id="playerName" type="text" placeholder="Nhập tên..." required maxlength="30" autocomplete="name">
+        <div class="actions">
+          <button id="btnStart" class="btn primary" type="submit" disabled>Bắt đầu</button>
+        </div>
+        <p class="hint">© Hòa Quang Thắng</p>
+      </form>
+    </div>
+  </main>
+
+  <!-- Intro modal -->
+  <div id="modalIntro" class="modal active" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+    <div class="modal-card glass anim-popIn">
+      <!-- ** GHI CHÚ **: Đã thêm icon và làm mới tiêu đề -->
+      <h2 id="introTitle">💡 SMS · Cách chơi</h2>
+      <ul class="list">
+        <li>Mỗi ngày có thể nhận <b>tin nhắn lạ</b>. Nhấn thông báo để mở khung chat giống thật.</li>
+        <li>Một kịch bản có <b>2–3 tin</b> gửi trước khi bạn chọn hành động.</li>
+        <li><b>Chọn sai là thua ngay</b>. Chọn đúng đủ nhiều ngày ⇒ nhận <b>Giấy chứng nhận</b>.</li>
+        <li><b>Cử chỉ</b>: Vuốt <b>phải</b> = Gọi kiểm chứng · Vuốt <b>trái</b> = Thoát.</li>
+      </ul>
+      <!-- ** GHI CHÚ **: Cấu trúc lại nút bấm cho đẹp hơn -->
+      <div class="actions">
+        <button id="btnUnderstood" class="btn primary big">Đã hiểu</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer muted">© Hòa Quang Thắng</footer>
+
+  <script>
+    const btnStart = document.getElementById('btnStart');
+    const nameInput = document.getElementById('playerName');
+    const modal = document.getElementById('modalIntro');
+    
+    nameInput.addEventListener('input', ()=>{
+      btnStart.disabled = nameInput.value.trim().length === 0;
+    });
+
+    document.getElementById('formStart').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = (nameInput.value||'').trim() || 'Người chơi';
+      const days = 5, notif = true;
+      localStorage.setItem('tb_player', JSON.stringify({ name, days, notif }));
+      location.href = 'game.html';
+    });
+
+    document.getElementById('btnUnderstood').addEventListener('click', ()=>{
+      modal.style.opacity = '0';
+      modal.addEventListener('transitionend', () => modal.classList.remove('active'), { once: true });
+      btnStart.disabled = (nameInput.value.trim().length === 0);
+    });
+  </script>
+</body>
+</html>
